@@ -45,3 +45,34 @@ update userlist set no = '';
 
 --④컬럼이름변경
 --alter table 테이블이름rename column 기존컬럼명to 변경컬럼명
+alter table userlist rename column phone to tel;
+alter table userlist rename column no to num;
+select * from userlist;
+
+--⑤테이블삭제
+--drop table 테이블이름
+select * from userlist;
+drop table userlist;
+delete from userlist;
+rollback;
+select * from userlist;
+
+-- 삭제 테이블 목록 보기
+show RECYCLEBIN;
+desc recyclebin;
+
+-- 복구 (삭제된 테이블)
+FLASHBACK table userlist to before drop;
+
+drop table emp2 purge;
+flashback table emp2 to before drop;
+select * from emp2;
+
+show recyclebin;
+
+-- 휴지통 비우기
+purge RECYCLEBIN;
+
+drop table emp2;
+select * from emp2;
+select * from tab;
