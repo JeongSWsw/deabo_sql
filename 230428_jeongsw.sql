@@ -76,3 +76,36 @@ purge RECYCLEBIN;
 drop table emp2;
 select * from emp2;
 select * from tab;
+
+-- 레코드 삽입 / 삭제 / 수정 ----------------
+--insert into 테이블이름(컬럼명, 컬럼명,...) values(값, 값, ...)
+--insert into 테이블이름values(값, 값, ...)
+--          =>모든컬럼에모두값을넣을때사용
+
+select * from userlist;
+select * from gift;
+desc gift;
+insert into gift values (100,'냉장고세트',1000, 100000);
+insert into gift(gname,g_end) values ('동화책',30000);
+
+-- 레코드 수정
+--update 테이블이름
+--set 컬럼명=변경값, 컬럼명=변경값, 컬럼명=변경값, .....
+--[ where 조건식]
+select * from professor;
+--select name, position, pay,pay*1.2 as "인상분", bonus
+select *
+    from professor
+    where position='전임강사';
+    
+update professor set pay = pay * 1.2 
+    where position = '정교수';
+rollback;
+
+-- 레코드 삭제
+--Delete table이름[ where 조건식]
+--truncate table 테이블이름;
+select * from gift;
+select * from gift where gname like '%세트'; -- % :모든, _ : 한문자
+delete gift where gname LIKE '%세트';
+rollback;
