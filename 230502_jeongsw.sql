@@ -77,4 +77,32 @@ select * from gogak;
 select jumin, substr(jumin,7,1) from gogak;
 select instr('abcd','b') from dual; -- index number : 1부터 시작
 select id, instr(id, 'b') from professor;
-select instr('abcdefwlfklsnflsfbsf','b',-1) from dual; -- 1이면 뒤에서부터 찾는다.
+select instr('abcdefwlfklsnflsfbsfb','b',-1) from dual; -- 1이면 뒤에서부터 찾는다.
+select instr('abcdefwlfklsnflsfbsfb','b',-3) from dual;
+
+select lpad('abcd',20,'#') from dual;
+select rpad('abcd',20,'@') from dual;
+select lpad('한글',10,'#') from dual;
+
+select rpad(lengthb('한글'),10,'$') from dual;
+select rpad(length('한글'),10,'$') from dual;
+
+select dname, length(dname), lengthb(dname) from dept2;
+select dname, substr(dname,3) from dept2;
+select dname, substr(dname,2,3) from dept2;
+
+select rpad(dname, 10, substr('1234567890', length(dname) + 1)) "RPAD연습" from dept2;
+select lpad(dname, 10, substr('1234567890', length(dname) + 1)) "LPAD연습" from dept2;
+
+select concat(name, position) || '님'
+from professor
+where deptno = 101;
+
+select name || position || '님'
+from professor;
+
+-- order by
+select * from emp2
+order by name, deptno desc, pay desc;
+
+-- ppt 2장 실습 : 단일행 함수
