@@ -333,3 +333,7 @@ select * from student where deptno2 is not null;
 --문제9] 담당교수(profno)가 1000 ~ 2001 번 사이 학생들 찾기 
 select * from student
 where profno  between 1000 and 2001;
+
+select name, hiredate
+from professor
+where hiredate > '98/03/22';
