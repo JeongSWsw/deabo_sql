@@ -52,3 +52,14 @@ and pay < 250;
 
 delete from dept2
 where dcode between 9000 and 9100;
+
+select * from pt_01;
+select * from pt_02;
+select * from p_total;
+merge into p_total total
+using pt_01 p01
+on (total.판매번호=p01.판매번호)
+when matched then
+update set total.제품번호 = p01.제품번호
+when not matched then
+insert values(p01.판매번호, p01.제품번호, p01.수량, p01.금액);
