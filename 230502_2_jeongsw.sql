@@ -56,5 +56,72 @@ select name, pay, to_char(pay, '999,999,999,999') from emp2;
 select name, pay, to_char(pay, '999,999,999,999') from emp2;
 
 
-select * from emp;
-select * from dept;
+select * from emp; -- 14
+select * from dept;-- 4
+
+-- 부서번호가 10이면 ACCOUNTING, 20이면 RESEARCH, 30이면 SALES
+-- 나머지는 OPERATIONS를 출력하는 예제
+SELECT deptno, DECODE(deptno, 10 , 'ACCOUNTING' ,
+                              20 , 'RESEARCH' ,
+                              30 , 'SALES', 'OPERATIONS') name
+  FROM dept;
+
+-- 10부서는 급여합계를, 20부서는 최대값을, 30부서는 최소값을 출력하는 예제
+SELECT deptno, DECODE(deptno, 10 , SUM(sal),
+                              20 , MAX(sal),
+                              30 , MIN(sal),
+                              40, avg(sal)) sal
+  FROM emp
+ GROUP BY deptno;
+ 
+select deptno, dname, decode(deptno,
+                        10, '판교점',
+                        20, '정자점',
+                        30, '야탑점',
+                        40, '서울본사') name
+                        from dept;
+ 
+select * from department;
+select * from professor;
+
+SELECT deptno, 
+               NVL(SUM(DECODE(deptno, 101, pay)),0) deptno101, 
+               NVL(SUM(DECODE(deptno, 102, pay)),0) deptno102,
+               NVL(SUM(DECODE(deptno, 103, pay)),0) deptno103,
+               NVL(SUM(DECODE(deptno, 201, pay)),0) deptno201,
+               NVL(SUM(DECODE(deptno, 202, pay)),0) deptno202,
+               NVL(SUM(DECODE(deptno, 203, pay)),0) deptno203,
+               NVL(SUM(DECODE(deptno, 301, pay)),0) deptno301
+  FROM professor
+  GROUP BY deptno
+  order by deptno; 
+  
+SELECT deptno, 
+       CASE deptno
+         WHEN 10 THEN 'ACCOUNTING'
+         WHEN 20 THEN 'RESEARCH'
+         WHEN 30 THEN 'SALES'
+         ELSE 'OPERATIONS'
+       END as "Dept Name"
+  FROM dept;
+  
+  SELECT ename ,
+       CASE
+          WHEN sal < 1000  THEN sal+(sal*0.8)
+          WHEN sal BETWEEN 1000 AND 2000 THEN sal+(sal*0.5)
+          WHEN sal BETWEEN 2001 AND 3000 THEN sal+(sal*0.3)
+          ELSE sal+(sal*0.1)
+       END sal
+  FROM emp; 
+  
+  -- pdept에 따라서 지사명을 출력하세요 (dcode, case 이용)
+  select * from dept2;
+  SELECT pdept, 
+       CASE pdept
+         WHEN '0001' THEN area
+         WHEN '1000' THEN area
+         WHEN '1003' THEN area
+         WHEN '1006' THEN area
+         WHEN '1007' THEN area
+         end
+  FROM dept2;
