@@ -98,3 +98,116 @@ desc c_empAll;
 select * from all_constraints --kingsmile 사용자가 갖고있는 전체 제약조건 추출
     where Table_name = 'c_empAll'; -- 조건에 따른 테이블의 제약조거만 확인 (테이블명 대소문자 구분함)
 -- 테이블 제약조건은 복사가 안됨!!!
+
+select * from emp where deptno = 20;
+create table c_emp_20
+    as select * from emp where deptno=20; -- 조건을 줘서 테이블 복사 가능
+select * from c_emp_20;
+
+select * from emp where deptno=30;
+create table c_emp_30
+    as select empno 사번, ename 사원명, job 직책, sal 급여
+    from emp where deptno=30;
+    
+-- 문제1] 교수테이블에서 전임강사만 뽑아서 테이블 생성
+select * from professor;
+create table c_professor_1
+    as select * from professor where position='전임강사';
+select * from c_professor_1;
+
+-- 문제2] emp 테이블에서 mgr가 7566번인 사람만 추출해서 테이블 생성
+select * from emp;
+create table c_emp_7566
+    as select * from emp where mgr=7566;
+select * from c_emp_7566;
+
+-- 형식 > 구조물만 복사하길 원할때
+--create table 테이블명
+--    as select 필드명 ... 
+--    from 테이블명 where 1=0; -- 조건 거짓
+
+create table c_emp4
+    as select * from emp
+    where 1=0;
+select * from c_emp4;
+
+create table c_emp5
+    as select empno, ename, job, sal from emp;
+    
+select * from c_empAll; -- 전체 복사
+select * from c_emp_20; -- 조건에 맞게 복사
+select * from c_emp_30; -- 조건적용, 별칭
+select * from c_emp4;   -- 구조물만 복사, 레코드 없음
+select * from c_emp5;   -- 원하는 필드에 해당하는 레코드 복사, empno, ename, job, sal
+
+-- 제약조건들은 복사 안됨!!!
+
+
+-- Union -------- pk / fk 관계 아닌 상태 테이블 합치기
+select * from emp
+union -- 중복행 제거
+select * from c_empAll;
+
+select * from emp
+union all -- 중복행 포함
+select * from c_empAll;
+
+insert into c_empAll values(7788, 'kingsmile', 'manager', 7566, '2202/01/17' , 5000, 1000, 30);
+
+select * from emp 
+union -- 중복행 제거
+select * from c_emp5; -- error : 필드개수와 데이터타입이 맞아야함
+
+desc emp;
+
+-- 검색!!!!!!!! 쿼리문은 대소문자 구분 안한다.
+-- 단, 레코드는 대소문자 구분한다.
+select * from c_empAll;
+select * from c_empAll where job='MANAGER';
+select * from c_empAll where job='MANAGER' or job='manager';
+select * from c_empAll where job!='MANAGER' or job!='manager';
+select * from c_empAll where job<>'MANAGER' or job<>'manager';
+select * from c_empAll where job in('MANAGER','manager');
+select * from c_empAll where job not in('MANAGER','manager');
+
+select empno 사원번호, ename 이름, sal 급여
+    from emp
+--    where ename = 'FORD'
+--    where 이름 = 'FORD'; -- error : 별칭으로 조건 X
+    order by 급여 DESC;    -- 별칭으로 정렬 O
+    
+-- 문제1] c_emp_20, c_emp4 union 결과
+select * from c_emp_20
+union
+select * from c_emp4;
+
+-- 문제2] 사원번호, 이름, 급여 그리고 15%인상된 급여를 정수로 표시하되
+-- 컬럼명을 New Salary로 지정하여 출력하라
+select * from emp;
+select empno 사원번호, ename 이름, sal 급여, round(sal*1.15) "New Salary"
+from emp;
+
+select empno 사원번호, ename 이름, sal 급여, cast(sal*1.15 as int) "New Salary"
+from emp;
+
+-- 문제3] 2번 문제와 동일한 데이터에서 급여 인상분 ( 새 급여에서 이전 급여를 뺀 값 )
+-- 을 추가해서 출력하라 (컬럼명은 increase로 하라)
+select empno 사원번호, ename 이름, sal 급여, round(sal*1.15) "New Salary", round(sal*1.15) - sal "increase"
+from emp;
+
+-- 문제4] 각 사원의 이름을 표시하고 근무 달 수를 계산하여
+-- 커럼명을 Months_Works로 지정하고, 근무 달수를 기준으로 오래된 사람부터 정렬하여 출력
+select * from emp;
+select ename 사원이름, floor(months_between(sysdate, hiredate)) Months_Works
+from emp
+order by Months_Works desc;
+
+-- 문제5] 사원의 이름과 커미션을 출력하되
+-- 커미션이 책정되지 않은 사원의 커미션은 'no commission'으로 출력
+select * from emp;
+select ename 사원이름, nvl(comm,'no commission') 커미션
+from emp; -- error 
+select ename 사원이름, nvl(to_char(comm),'no commission') 커미션
+from emp; 
+select ename 사원이름, decode(comm, null, 'no commission', comm)
+from emp; 
